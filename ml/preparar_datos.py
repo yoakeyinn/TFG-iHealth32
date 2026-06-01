@@ -681,9 +681,9 @@ def download_challenge2019(target_por_clase: int = 6000):
 
 def download_data():
     print("\n" + "█" * 60)
-    print("  PREPARAR DATOS — iHealth32 (7 clases, sin VitalDB)")
+    print("  PREPARAR DATOS — iHealth32 (6 clases)")
     print("█" * 60)
-    print("  Clases (7):")
+    print("  Clases (6):")
     for k, v in LABEL_NOMBRES.items():
         print(f"    [{k}] {v}")
     print()
