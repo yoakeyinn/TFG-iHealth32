@@ -9,9 +9,9 @@
 #include "Oximetro_MAX30100.h"
 #include "ECG_AD8232.h"
 #include "Temp_MAX30205.h"
-#include "wifi_ws.h"
-#include "clasificador.h"
-#include "ecg_features.h"
+#include "WiFi_WS.h"
+#include "Clasificador.h"
+#include "ECG_Features.h"
 
 // Pines hardware: SDA=21, SCL=22 (I2C), ECG=34 (ADC1), LO+=26, LO-=27 (lead-off)
 static const int SDA_PIN  = 21;

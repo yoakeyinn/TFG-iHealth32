@@ -2,7 +2,7 @@
 // ventana restando la media y dividiendo por la desviación típica (media=0, std=1).
 // Esto hace que los resultados sean comparables entre pacientes sin importar la ganancia
 // del amplificador ni el nivel de contacto del electrodo con la piel.
-#include "ecg_features.h"
+#include "ECG_Features.h"
 #include <math.h>
 
 void calcular_features_ecg(int* buf, int n,

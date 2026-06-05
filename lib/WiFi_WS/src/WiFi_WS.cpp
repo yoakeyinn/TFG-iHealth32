@@ -2,7 +2,7 @@
 // y arranca el servidor WebSocket en ws://192.168.4.1/ws. wifiWsBroadcast() envía el JSON
 // de vitales a todos los clientes conectados. wifiWsCleanup() libera las conexiones cerradas
 // para evitar que se acumulen y agoten la memoria del ESP32 tras sesiones largas.
-#include "wifi_ws.h"
+#include "WiFi_WS.h"
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>

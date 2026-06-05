@@ -31,9 +31,9 @@
 #include "Oximetro_MAX30100.h"
 #include "ECG_AD8232.h"
 #include "Temp_MAX30205.h"
-#include "wifi_ws.h"
-#include "clasificador.h"
-#include "ecg_features.h"
+#include "WiFi_WS.h"
+#include "Clasificador.h"
+#include "ECG_Features.h"
 
 #define TEST_TEMP_ECG
 

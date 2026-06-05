@@ -2,7 +2,7 @@
 // las 8 entradas con Z-score: resta la media y divide por la desviación típica de cada parámetro
 // (valores guardados en normalizacion.h). Esto es imprescindible: la red fue entrenada con datos
 // normalizados, y sin este paso las predicciones serían incorrectas.
-#include "clasificador.h"
+#include "Clasificador.h"
 #include <Arduino.h>
 #include <TensorFlowLite_ESP32.h>
 #include "tensorflow/lite/micro/all_ops_resolver.h"
