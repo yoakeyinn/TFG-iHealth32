@@ -56,7 +56,7 @@
 
 #define TEST_BPM_TARGET     -1.0f  // lpm  — < 0 = BPM real del MAX30100
 #define TEST_SPO2_TARGET    -1.0f  // %    — < 0 = SpO2 real del MAX30100
-#define TEST_TEMP_TARGET    -1.0f  // °C   — < 0 = Temp real del MAX30205
+#define TEST_TEMP_TARGET    36.0f  // °C   — < 0 = Temp real del MAX30205
 #define TEST_ECG_RANGE       7.8f  // ecg_range
 #define TEST_ECG_SKEW        1.0f  // ecg_skew
 #define TEST_ECG_KURT        3.6f  // ecg_kurtosis
