@@ -11,18 +11,6 @@ Fuentes utilizadas (todas gratuitas, sin contraseña):
   3. Apnea-ECG Database — apnea del sueño a 100 Hz        →  Clase 2: Hipoxia/Apnea
   4. CinC Challenge 2019 — vitales reales de UCI           →  Clases 3, 4, 5: Fiebre, Taquicardia, Hipotermia
 
-Sobre la imputación de SpO2 y Temperatura:
-  Las bases de datos ECG-only (NSRDB, afdb, apnea-ecg) solo tienen señal eléctrica
-  cardíaca, sin SpO2 ni temperatura. Para tener los 8 features que necesita la RNA,
-  generamos valores plausibles de SpO2 y Temp usando distribuciones normales N(media, σ)
-  basadas en la literatura clínica. Por ejemplo, un paciente con FA suele tener SpO2
-  en torno al 97.5 %. El Challenge 2019 sí tiene vitales reales de UCI, por lo que
-  no necesita imputación.
-
-  Sano        SpO2: N(99.0, 0.7) ∈ [97.0, 100.0]  Temp: N(36.6, 0.3) ∈ [36.0, 37.2]
-  FA          SpO2: N(97.5, 0.8) ∈ [96.0, 100.0]  Temp: N(36.5, 0.5) ∈ [35.5, 37.5]
-  Hipoxia     SpO2: N(89.0, 2.5) ∈ [82.0, 94.0]   Temp: N(36.5, 0.3) ∈ [35.5, 37.5]
-
   Nota: la bradicardia (BPM < 50) se detecta en el firmware por umbral simple y no
   tiene clase propia en la RNA.
 """
@@ -60,8 +48,8 @@ LABEL_NOMBRES = {
 NUM_CLASES = 6
 
 # ---------------------------------------------------------------------------
-# DISTRIBUCIONES DE IMPUTACIÓN POR CLASE
-# (BPM se calcula siempre del ECG real; SpO2 y Temp se muestrean de N(μ,σ))
+# DISTRIBUCIONES DE SpO2 Y TEMPERATURA POR CLASE
+# (BPM se calcula siempre del ECG real)
 # ---------------------------------------------------------------------------
 
 # Sano — adultos sanos en reposo/actividad leve
@@ -69,11 +57,11 @@ _SANO_BPM_RANGO = (50, 95)
 _SANO_SPO2 = (99.0, 0.7, 97.0, 100.0)  # μ, σ, clip_min, clip_max
 _SANO_TEMP = (36.6, 0.3, 36.0, 37.2)
 
-# Fibrilación Auricular — taquiarritmia, O2 generalmente conservada
+# Fibrilación Auricular
 _FA_SPO2 = (97.5, 0.8, 96.0, 100.0)
 _FA_TEMP = (36.5, 0.5, 35.5, 37.5)
 
-# Hipoxia / Apnea obstructiva — caída significativa de SpO2
+# Hipoxia / Apnea obstructiva
 _APNEA_SPO2 = (89.0, 2.5, 82.0, 94.0)
 _APNEA_TEMP = (36.5, 0.3, 35.5, 37.5)
 
@@ -424,10 +412,6 @@ def download_afdb_fa(n_records: int = 15, rng_seed: int = 43, workers: int = 3):
 
     print("\n" + "═" * 60)
     print("  FUENTE 2 — MIT-BIH AF Database (FA)")
-    mu, sig, lo, hi = _FA_SPO2
-    print(f"  SpO2 imputado : N({mu}, {sig}) ∈ [{lo}, {hi}] %")
-    mu, sig, lo, hi = _FA_TEMP
-    print(f"  Temp imputada : N({mu}, {sig}) ∈ [{lo}, {hi}] °C")
     print(f"  Paralelo: {workers} descargas simultáneas")
     print("═" * 60)
 
@@ -512,10 +496,6 @@ def download_apnea_ecg_hipoxia(
 
     print("\n" + "═" * 60)
     print("  FUENTE 3 — PhysioNet Apnea-ECG (Hipoxia/Apnea)")
-    mu, sig, lo, hi = _APNEA_SPO2
-    print(f"  SpO2 imputado : N({mu}, {sig}) ∈ [{lo}, {hi}] %")
-    mu, sig, lo, hi = _APNEA_TEMP
-    print(f"  Temp imputada : N({mu}, {sig}) ∈ [{lo}, {hi}] °C")
     print(f"  Paralelo: {workers} descargas simultáneas")
     print("═" * 60)
 
@@ -586,11 +566,9 @@ def _c19_save(rows: list, label: int, nombre: str, target: int) -> int:
 def download_challenge2019(target_por_clase: int = 6000):
     """
     Descarga datos de vitales reales del CinC Challenge 2019 (pacientes de UCI).
-    A diferencia de las otras fuentes, estos datos incluyen SpO2 y Temp reales,
-    por lo que no necesitan imputación. Una sola pasada con 8 hilos paralelos
-    recolecta las tres clases a la vez (Fiebre, Taquicardia e Hipotermia),
-    filtrando cada fila según umbrales clínicos de HR y Temp.
-    Los CSVs resultantes no tienen columnas ECG (solo BPM, SpO2, Temp, Label).
+    Una sola pasada con 8 hilos paralelos recolecta las tres clases a la vez
+    (Fiebre, Taquicardia e Hipotermia), filtrando cada fila según umbrales
+    clínicos de HR y Temp. Los CSVs resultantes incluyen BPM, SpO2, Temp y Label.
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
