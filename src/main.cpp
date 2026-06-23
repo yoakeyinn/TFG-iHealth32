@@ -1,6 +1,6 @@
 /* Firmware iHealth32: monitoreo de signos vitales con clasificación por red neuronal.
    El ESP32 tiene dos núcleos (cores) que usamos para separar tareas críticas:
-     Core 0 — captura el ECG a 200 muestras/segundo de forma precisa con FreeRTOS.
+     Core 0 — captura el ECG a 250 muestras/segundo de forma precisa con FreeRTOS.
      Core 1 — lee los sensores I2C (MAX30100, MAX30205), calcula las features del ECG,
               ejecuta la red neuronal cada segundo y envía los datos por WiFi/WebSocket. */
 
@@ -20,13 +20,13 @@ static const int ECG_PIN  = 34;
 static const int LO_PLUS  = 26;
 static const int LO_MINUS = 27;
 
-/* Buffer circular del ECG: almacena las últimas 200 muestras (= 1 segundo a 200 Hz).
+/* Buffer circular del ECG: almacena las últimas 250 muestras (= 1 segundo a 250 Hz).
    Funciona como un anillo: cuando llega al final vuelve al principio sobreescribiendo
    la muestra más antigua. Core 0 escribe muestras; Core 1 las lee cada segundo.
    Antes de calcular los features, el buffer se "lineariza" (reordena en orden
    cronológico) para evitar que el salto entre el final y el principio del anillo
    parezca un cambio brusco de señal y distorsione los estadísticos ECG. */
-static const int ECG_BUF_SIZE = 200;
+static const int ECG_BUF_SIZE = 250;
 static int  ecg_buf[ECG_BUF_SIZE];
 static int  ecg_buf_idx   = 0;
 static bool ecg_buf_ready = false;  // true tras la primera vuelta completa del anillo

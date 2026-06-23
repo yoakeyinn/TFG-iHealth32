@@ -10,7 +10,7 @@ static int aPin_ = 34;
 static int loP_  = 26;
 static int loM_  = 27;
 
-static uint32_t      periodUs_  = 5000;
+static uint32_t      periodUs_  = 4000;
 static volatile bool newSample_ = false;
 static volatile int  lastPlot_  = 0;
 
